@@ -3,4 +3,4 @@ package main
 import "fmt"
 
 
-func KnownPluginFunction(pluginInputNumber int) { fmt.Printf("My custom code prints PluginInputNumber: %d\n", pluginInputNumber) }
+func PluginFunc(inputNumber int) { fmt.Printf("My custom code prints InputNumber: %d\n", inputNumber) }

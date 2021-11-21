@@ -3,29 +3,23 @@ package main
 import (
 	"log"
 	"plugin"
-	"sync"
-	"fmt"
 )
 
 
 func main()  {
 	log.Println("Application started")
-	wg := sync.WaitGroup{}
-	for i := 1; i <= 2; i++ {
-		wg.Add(1)
-		go loadAndCallPlugin(fmt.Sprintf("./plugin%s.so", i), &wg)
-	}
-	wg.Wait()
+	loadAndCallPlugin("plugin1.so")
+	loadAndCallPlugin("plugin1.so")
+	loadAndCallPlugin("plugin2.so")
 }
 
-func loadAndCallPlugin(pluginName string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func loadAndCallPlugin(pluginName string) {
 	log.Println("loading plugin ", pluginName)
-	loadedPlugin, err := plugin.Open(plugin)
+	loadedPlugin, err := plugin.Open(pluginName)
 	if err != nil {
 		log.Printf("plugin loading failed %v", err)
 	}
-	fnSymbol, err := loadedPlugin.Lookup("KnownPluginFunction")
+	fnSymbol, err := loadedPlugin.Lookup("PluginFunc")
 	if err != nil {
 		log.Printf("symbol lookup failed %v", err)
 	}
