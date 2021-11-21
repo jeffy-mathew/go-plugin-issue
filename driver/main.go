@@ -9,7 +9,6 @@ import (
 func main()  {
 	log.Println("Application started")
 	loadAndCallPlugin("plugin1.so")
-	loadAndCallPlugin("plugin1.so")
 	loadAndCallPlugin("plugin2.so")
 }
 
