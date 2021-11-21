@@ -3,33 +3,33 @@ package main
 import (
 	"log"
 	"plugin"
+	"sync"
+	"fmt"
 )
 
 
 func main()  {
 	log.Println("Application started")
-	log.Println("loading plugin1")
-	plugin1, err := plugin.Open("./plugin1.so")
+	wg := sync.WaitGroup{}
+	for i := 1; i <= 2; i++ {
+		wg.Add(1)
+		go loadAndCallPlugin(fmt.Sprintf("./plugin%s.so", i), &wg)
+	}
+	wg.Wait()
+}
+
+func loadAndCallPlugin(pluginName string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	log.Println("loading plugin ", pluginName)
+	loadedPlugin, err := plugin.Open(plugin)
 	if err != nil {
 		log.Printf("plugin loading failed %v", err)
 	}
-	fnSymbol1, err := plugin1.Lookup("KnownPluginFunction")
+	fnSymbol, err := loadedPlugin.Lookup("KnownPluginFunction")
 	if err != nil {
 		log.Printf("symbol lookup failed %v", err)
 	}
-	plugin1Func := fnSymbol1.(func(pluginInputNumber int))
-	plugin1Func(10)
-	log.Println("finished loading plugin1")
-	log.Println("loading plugin second time")
-	plugin2, err := plugin.Open("./plugin1.so")
-	if err != nil {
-		log.Printf("plugin loading failed %v", err)
-	}
-	fnSymbol2, err := plugin2.Lookup("KnownPluginFunction")
-	if err != nil {
-		log.Printf("symbol lookup failed %v", err)
-	}
-	plugin2Func := fnSymbol2.(func(pluginInputNumber int))
-	plugin2Func(10)
-	log.Println("finished loading plugin2")
+	pluginFunc := fnSymbol.(func(pluginInputNumber int))
+	pluginFunc(10)
+	log.Println("loaded plugin ", pluginName)
 }
