@@ -1,9 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 func init() {
-	fmt.Println("initialized plugin")
+	log.Println("initialized plugin")
 }
 func PluginFunc(pluginInputNumber int) { fmt.Printf("My custom code prints PluginInputNumber: %d\n", pluginInputNumber) }
 
