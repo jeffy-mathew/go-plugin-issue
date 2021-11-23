@@ -1,15 +1,11 @@
 #!/bin/bash
 set -x
 
-# remove docker image
-docker rm -f static-compiler static-compiler
 
-# build docker
-cd static-compiler
-docker build -f Dockerfile -t static-compiler .
+docker build -f Compiler-Dockerfile --build-arg BUILD_FILE_PATH=build-static.sh -t static-compiler .
 
 
-cd ../src/plugin1
+cd src/plugin1
 docker run --rm -v `pwd`:/plugin-source static-compiler plugin1.so
 
 

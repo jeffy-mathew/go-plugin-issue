@@ -1,13 +1,9 @@
 #!/bin/bash
 set -x
 
-# remove docker image
-docker rm -f dynamic-compiler dynamic-compiler
-# build compiler
-cd dynamic-compiler
-docker build -f Dockerfile -t dynamic-compiler .
+docker build -f Compiler-Dockerfile --build-arg BUILD_FILE_PATH=build-dynamic.sh -t dynamic-compiler .
 
-cd ../src/plugin1
+cd src/plugin1
 docker run --rm -v `pwd`:/plugin-source  dynamic-compiler plugin1.so
 
 
