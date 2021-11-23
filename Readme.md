@@ -1,43 +1,41 @@
-This repository tries to reproduce `plugin already loaded` issue.
-When the same plugin is build and loaded once again from the driver program,
-it results in a `plugin already loaded error`. 
+This repository intends to reproduce `plugin already loaded` issue with golang plugin
 
-Step to follow,
+To reproduce issue run `./run-static.sh`
 
-    ./setup.sh
-    cd driver
-    ./main
-
-Current output 
+Output
 
 ```
-2021/11/22 01:02:32 Application started
-2021/11/22 01:02:32 loading plugin  plugin1.so
+2021/11/23 16:14:03 Application started
+2021/11/23 16:14:03 loaded plugin  plugin1.so
 My custom code prints InputNumber: 10
-2021/11/22 01:02:32 loaded plugin  plugin1.so
-2021/11/22 01:02:32 loading plugin  plugin2.so
-2021/11/22 01:02:32 plugin loading failed plugin.Open("plugin2"): plugin already loaded
+2021/11/23 16:14:03 plugin loading failed plugin.Open("plugin2"): plugin already loaded
 panic: runtime error: invalid memory address or nil pointer dereference
-[signal SIGSEGV: segmentation violation code=0x1 addr=0x28 pc=0x52f0b4]
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x28 pc=0x52e2a5]
 
 goroutine 1 [running]:
 plugin.lookup(...)
-	/usr/local/go/src/plugin/plugin_dlopen.go:138
+        /usr/local/go/src/plugin/plugin_dlopen.go:138
 plugin.(*Plugin).Lookup(...)
-	/usr/local/go/src/plugin/plugin.go:40
-main.loadAndCallPlugin(0x55c2ec, 0xa)
-	/home/jeff/works/go-plugin-issue/driver/main.go:22 +0x154
+        /usr/local/go/src/plugin/plugin.go:40
+main.loadAndCallPlugin(0x55b16b, 0xa, 0x55b32d, 0xb)
+        /driver/main.go:20 +0xc5
 main.main()
-	/home/jeff/works/go-plugin-issue/driver/main.go:13 +0xb
+        /driver/main.go:12 +0xc5
+
 ```
 
-Expected output
+This issue occurs when the plugins are built from same build directory `/go/src/plugin-build` in the plugin compiler.
+
+This can be fixed if we keep the plugin source code in different directories 
+while building the plugin using the compiler.
+
+run `./run-dynamic.sh` where the plugin is built from dynamically generated directories.
+
+Output
 ```
-2021/11/22 01:02:32 Application started
-2021/11/22 01:02:32 loading plugin  plugin1.so
+2021/11/23 16:21:16 Application started
+2021/11/23 16:21:16 loaded plugin  plugin1.so
 My custom code prints InputNumber: 10
-2021/11/22 01:02:32 loaded plugin  plugin1.so
-2021/11/22 01:02:32 loading plugin  plugin2.so
+2021/11/23 16:21:16 loaded plugin  plugin2.so
 My custom code prints InputNumber: 10
-2021/11/22 01:02:32 loaded plugin  plugin2.so
 ```

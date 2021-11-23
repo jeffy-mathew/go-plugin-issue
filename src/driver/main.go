@@ -8,17 +8,16 @@ import (
 
 func main()  {
 	log.Println("Application started")
-	loadAndCallPlugin("plugin1.so")
-	loadAndCallPlugin("plugin2.so")
+	loadAndCallPlugin("plugin1.so", "PluginFunc")
+	loadAndCallPlugin("plugin2.so", "PluginFunc1")
 }
 
-func loadAndCallPlugin(pluginName string) {
-	log.Println("loading plugin ", pluginName)
+func loadAndCallPlugin(pluginName, symbolName string) {
 	loadedPlugin, err := plugin.Open(pluginName)
 	if err != nil {
 		log.Printf("plugin loading failed %v", err)
 	}
-	fnSymbol, err := loadedPlugin.Lookup("PluginFunc")
+	fnSymbol, err := loadedPlugin.Lookup(symbolName)
 	if err != nil {
 		log.Printf("symbol lookup failed %v", err)
 	}
