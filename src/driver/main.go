@@ -10,6 +10,10 @@ func main()  {
 	log.Println("Application started")
 	loadAndCallPlugin("plugin1.so", "PluginFunc")
 	loadAndCallPlugin("plugin2.so", "PluginFunc1")
+	loadAndCallPlugin("plugin3.so", "PluginFunc")
+	loadAndCallPlugin("plugin1.so", "PluginFunc")
+	loadAndCallPlugin("plugin2.so", "PluginFunc1")
+	loadAndCallPlugin("plugin3.so", "PluginFunc")
 }
 
 func loadAndCallPlugin(pluginName, symbolName string) {

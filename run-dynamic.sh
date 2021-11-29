@@ -10,13 +10,15 @@ docker run --rm -v `pwd`:/plugin-source  dynamic-compiler plugin1.so
 cd ../plugin2
 docker run --rm -v `pwd`:/plugin-source  dynamic-compiler plugin2.so
 
+
+cd ../plugin3
+docker run --rm -v `pwd`:/plugin-source  dynamic-compiler plugin3.so
+
 cd ../..
 
-pwd
+ls src/plugin1 src/plugin2 src/plugin3
 
-ls src/plugin1 src/plugin2
-
-mv {src/plugin1/plugin1.so,src/plugin2/plugin2.so} src/driver
+mv {src/plugin1/plugin1.so,src/plugin2/plugin2.so,src/plugin3/plugin3.so} src/driver
 
 
 # build driver
