@@ -3,6 +3,7 @@
 set -xe
 
 plugin_name=$1
+PLUGIN_BUILD_PATH="/go/src/${plugin_name%.*}"
 
 function usage() {
     cat <<EOF
@@ -12,7 +13,8 @@ To build a plugin:
 EOF
 }
 
-export PLUGIN_BUILD_PATH=`mktemp -d -p /go/src`
+mkdir -p $PLUGIN_BUILD_PATH
+
 if [ -z "$plugin_name" ]; then
     usage
     exit 1
